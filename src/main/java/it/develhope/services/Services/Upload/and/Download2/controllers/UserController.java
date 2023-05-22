@@ -53,6 +53,7 @@ public class UserController {
     public @ResponseBody byte[] getProfileImage(@PathVariable Long id, HttpServletResponse response){
     DownloadProfilePictureDTO downloadProfilePictureDTO = userService.downloadProfilePicture(id);
     String fileName = downloadProfilePictureDTO.getUtente().getProfilePicture();
+    if(fileName == null) throw new Exception("User doesn't have a profile picture");
     String extension = FilenameUtils.getExtension(fileName);
         switch(extension){
             case "gif":
