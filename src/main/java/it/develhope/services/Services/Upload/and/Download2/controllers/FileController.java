@@ -1,12 +1,14 @@
 package it.develhope.services.Services.Upload.and.Download2.controllers;
 
 import it.develhope.services.Services.Upload.and.Download2.services.FileStorageService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/file")
@@ -15,13 +17,28 @@ public class FileController {
     @Autowired
     private FileStorageService fileStorageService;
 
-    @PostMapping("/download")
-    public String download(@RequestParam MultipartFile file) throws Exception{
+    @PostMapping("/upload")
+    public String upload(@RequestParam MultipartFile file) throws Exception{
         return fileStorageService.upload(file);
     }
 
-    @PostMapping("/upload")
-    public void upload(){
-
+    @GetMapping("/download")
+    public @ResponseBody byte[] download(@PathVariable String fileName, HttpServletResponse response) throws IOException {
+        System.out.println("Downloading " + fileName);
+        String extension = FilenameUtils.getExtension(fileName);
+        switch(extension){
+            case "gif":
+                response.setContentType(MediaType.IMAGE_GIF_VALUE);
+                break;
+            case "jpg":
+            case"jpeg":
+                response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+                break;
+            case "png":
+                response.setContentType(MediaType.IMAGE_PNG_VALUE);
+                break;
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\""+fileName+"\"");
+        return fileStorageService.download(fileName);
     }
 }
