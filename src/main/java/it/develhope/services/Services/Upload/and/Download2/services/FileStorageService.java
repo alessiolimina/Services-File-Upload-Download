@@ -37,7 +37,7 @@ public class FileStorageService {
     public byte[] download(String fileName) throws IOException {
     File fileFromRepository = new File(fileRepositoryFolder + "\\" + fileName);
     if(!fileFromRepository.exists()) throw new IOException("File doesn't exist");
-     return IOUtils.toByteArray(new FileInputStream(fileFromRepository));
+    return IOUtils.toByteArray(new FileInputStream(fileFromRepository));
     }
 
 }

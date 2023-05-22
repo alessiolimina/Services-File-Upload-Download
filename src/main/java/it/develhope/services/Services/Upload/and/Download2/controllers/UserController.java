@@ -1,8 +1,12 @@
 package it.develhope.services.Services.Upload.and.Download2.controllers;
 
+import it.develhope.services.Services.Upload.and.Download2.entities.Utente;
 import it.develhope.services.Services.Upload.and.Download2.repositories.UserRepository;
+import it.develhope.services.Services.Upload.and.Download2.services.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -11,9 +15,13 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping
-    public void create(){
+    @Autowired
+    private FileStorageService fileStorageService;
 
+    @PostMapping
+    public Utente create(Utente utente){
+     utente.setId(null);
+     return userRepository.save(utente);
     }
 
     @PostMapping("/{id}/profile")
@@ -22,12 +30,13 @@ public class UserController {
     }
 
     @GetMapping
-    public void getAll(){
-
+    public List<Utente> getAll(){
+        return userRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public void getOne(){
+    public void getOne(@PathVariable Long id){
+        userRepository.findById(id);
 
     }
 
@@ -38,12 +47,13 @@ public class UserController {
 
 
     @PutMapping("/{id}")
-    public void update(){
-
+    public void update(@RequestBody Utente utente, @PathVariable Long id){
+        utente.setId(id);
+        userRepository.save(utente);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(){
-
+    public void delete(@PathVariable Long id){
+        userRepository.deleteById(id);
     }
 }
