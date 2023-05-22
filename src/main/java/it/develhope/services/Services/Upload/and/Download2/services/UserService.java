@@ -21,16 +21,16 @@ public class UserService {
     private FileStorageService fileStorageService;
 
     @SneakyThrows
-    private Utente getUtente(Long userId){
-        Optional<Utente> optionalUtente =  userRepository.findById(userId);
-        if(!optionalUtente.isPresent()) throw new Exception("User is not present");
+    private Utente getUtente(Long userId) {
+        Optional<Utente> optionalUtente = userRepository.findById(userId);
+        if (!optionalUtente.isPresent()) throw new Exception("User is not present");
         return optionalUtente.get();
     }
 
     @SneakyThrows
     public Utente uploadProfilePicture(Long userId, MultipartFile profilePicture) {
         Utente utente = getUtente(userId);
-        if(utente.getProfilePicture() != null){
+        if (utente.getProfilePicture() != null) {
             fileStorageService.remove(utente.getProfilePicture());
         }
         String fileName = fileStorageService.upload(profilePicture);
@@ -44,10 +44,19 @@ public class UserService {
         DownloadProfilePictureDTO dto = new DownloadProfilePictureDTO();
         dto.setUtente(utente);
 
-        if(utente.getProfilePicture() == null) return dto;
+        if (utente.getProfilePicture() == null) return dto;
         byte[] profilePictureBytes = fileStorageService.download(utente.getProfilePicture());
         dto.setProfileImage(profilePictureBytes);
         return dto;
-        }
     }
+
+    @SneakyThrows
+    public void remove(Long userId) {
+        Utente utente = getUtente(userId);
+        if (utente.getProfilePicture() != null) {
+            fileStorageService.remove(utente.getProfilePicture());
+        }
+        userRepository.deleteById(userId);
+    }
+}
 

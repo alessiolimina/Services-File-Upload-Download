@@ -78,8 +78,9 @@ public class UserController {
         userRepository.save(utente);
     }
 
+    @SneakyThrows
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
-        userRepository.deleteById(id);
+        userService.remove(id);
     }
 }
