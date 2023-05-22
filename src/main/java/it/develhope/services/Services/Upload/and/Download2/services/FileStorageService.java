@@ -1,5 +1,6 @@
 package it.develhope.services.Services.Upload.and.Download2.services;
 
+import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,4 +41,11 @@ public class FileStorageService {
     return IOUtils.toByteArray(new FileInputStream(fileFromRepository));
     }
 
+    @SneakyThrows
+    public void remove(String fileName) {
+        File fileFromRepository = new File(fileRepositoryFolder + "\\" + fileName);
+        if(!fileFromRepository.exists()) return;
+        boolean deleteResult =  fileFromRepository.delete();
+        if(deleteResult == false) throw new Exception("Cannot delete file");
+    }
 }

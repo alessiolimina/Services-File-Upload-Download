@@ -30,6 +30,9 @@ public class UserService {
     @SneakyThrows
     public Utente uploadProfilePicture(Long userId, MultipartFile profilePicture) {
         Utente utente = getUtente(userId);
+        if(utente.getProfilePicture() != null){
+            fileStorageService.remove(utente.getProfilePicture());
+        }
         String fileName = fileStorageService.upload(profilePicture);
         utente.setProfilePicture(fileName);
         return userRepository.save(utente);
