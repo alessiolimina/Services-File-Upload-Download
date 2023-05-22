@@ -1,11 +1,15 @@
 package it.develhope.services.Services.Upload.and.Download2.controllers;
 
+import it.develhope.services.Services.Upload.and.Download2.dto.DownloadProfilePictureDTO;
 import it.develhope.services.Services.Upload.and.Download2.entities.Utente;
 import it.develhope.services.Services.Upload.and.Download2.repositories.UserRepository;
 import it.develhope.services.Services.Upload.and.Download2.services.FileStorageService;
 import it.develhope.services.Services.Upload.and.Download2.services.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,8 +50,24 @@ public class UserController {
     }
     @SneakyThrows
     @GetMapping("/{id}/profile")
-    public void getProfileImage(@PathVariable Long id){
-    userService.downloadProfilePicture(id);
+    public @ResponseBody byte[] getProfileImage(@PathVariable Long id, HttpServletResponse response){
+    DownloadProfilePictureDTO downloadProfilePictureDTO = userService.downloadProfilePicture(id);
+    String fileName = downloadProfilePictureDTO.getUtente().getProfilePicture();
+    String extension = FilenameUtils.getExtension(fileName);
+        switch(extension){
+            case "gif":
+                response.setContentType(MediaType.IMAGE_GIF_VALUE);
+                break;
+            case "jpg":
+            case"jpeg":
+                response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+                break;
+            case "png":
+                response.setContentType(MediaType.IMAGE_PNG_VALUE);
+                break;
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\""+fileName+"\"");
+        return downloadProfilePictureDTO.getProfileImage();
     }
 
 
