@@ -3,10 +3,14 @@ package it.develhope.services.Services.Upload.and.Download2.controllers;
 import it.develhope.services.Services.Upload.and.Download2.entities.Utente;
 import it.develhope.services.Services.Upload.and.Download2.repositories.UserRepository;
 import it.develhope.services.Services.Upload.and.Download2.services.FileStorageService;
+import it.develhope.services.Services.Upload.and.Download2.services.UserService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -16,7 +20,7 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private FileStorageService fileStorageService;
+    private UserService userService;
 
     @PostMapping
     public Utente create(Utente utente){
@@ -24,9 +28,10 @@ public class UserController {
      return userRepository.save(utente);
     }
 
+    @SneakyThrows
     @PostMapping("/{id}/profile")
-    public void uploadProfileImage(){
-
+    public Utente uploadProfileImage(@PathVariable Long id, @RequestParam MultipartFile profilePicture) {
+    return userService.uploadProfilePicture(id, profilePicture);
     }
 
     @GetMapping
@@ -35,14 +40,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public void getOne(@PathVariable Long id){
-        userRepository.findById(id);
+    public Optional<Utente> getOne(@PathVariable Long id){
+      return userRepository.findById(id);
 
     }
-
+    @SneakyThrows
     @GetMapping("/{id}/profile")
-    public void getProfileImage(){
-
+    public void getProfileImage(@PathVariable Long id){
+    userService.downloadProfilePicture(id);
     }
 
 
