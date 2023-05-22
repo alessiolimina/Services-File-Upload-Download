@@ -27,7 +27,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public Utente create(Utente utente){
+    public Utente create(@RequestBody Utente utente){
      utente.setId(null);
      return userRepository.save(utente);
     }
