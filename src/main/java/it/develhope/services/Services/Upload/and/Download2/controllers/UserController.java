@@ -3,7 +3,6 @@ package it.develhope.services.Services.Upload.and.Download2.controllers;
 import it.develhope.services.Services.Upload.and.Download2.dto.DownloadProfilePictureDTO;
 import it.develhope.services.Services.Upload.and.Download2.entities.Utente;
 import it.develhope.services.Services.Upload.and.Download2.repositories.UserRepository;
-import it.develhope.services.Services.Upload.and.Download2.services.FileStorageService;
 import it.develhope.services.Services.Upload.and.Download2.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
